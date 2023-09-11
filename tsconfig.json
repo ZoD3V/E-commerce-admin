@@ -13,7 +13,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "types": ["@prisma/client"],
     "plugins": [
       {
         "name": "next"
