@@ -13,7 +13,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
 interface StoreSwitcherProps extends PopoverTriggerProps{
-  items:store[] 
+  items:Store[] 
 }
 
 const StoreSwitcher = ({className,items=[]}:StoreSwitcherProps) => {
