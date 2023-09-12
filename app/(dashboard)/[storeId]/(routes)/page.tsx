@@ -1,4 +1,5 @@
 import { getGraph } from "@/app/actions/get-graph";
+import { getTotalSales } from "@/app/actions/get-sales";
 import { getTotalProduct } from "@/app/actions/get-total-product";
 import { getTotalRevenue } from "@/app/actions/get-total-revenue";
 import Overview from "@/components/overview";
@@ -14,6 +15,7 @@ const DashboardPage = async({params}:DashboardPageProps) => {
 
   const totalRevenue:number = await getTotalRevenue(params.storeId)
   const countproduct:number = await getTotalProduct(params.storeId)
+  const countSales:number = await getTotalSales(params.storeId)
   const graphRevenue = await getGraph(params.storeId)
 
   return (
@@ -44,7 +46,7 @@ const DashboardPage = async({params}:DashboardPageProps) => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                +25
+                {countSales}
               </div>
             </CardContent>
           </Card>
