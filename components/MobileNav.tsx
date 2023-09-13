@@ -4,9 +4,12 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 import {usePathname,useParams} from "next/navigation"
 
-type Props = {}
+interface MobileNavProps{
+  active:boolean
+  className?:React.HTMLAttributes<HTMLElement>
+}
 
-const MainNav = ({className,...props} : React.HTMLAttributes<HTMLElement>) => {
+const MobileNav = ({className,active} :MobileNavProps) => {
   const pathName  = usePathname()
   const params  = useParams()
 
@@ -50,12 +53,12 @@ const MainNav = ({className,...props} : React.HTMLAttributes<HTMLElement>) => {
 
   return (
     <nav
-    className={cn("items-center space-x-4 lg:space-x-6 hidden md:flex",className)}>
+    className={cn(`${active ? 'absolute right-5 top-20 flex flex-col w-[250px] bg-gray-100 px-10 py-5 rounded-md transition-all duration-300 md:hidden' : 'hidden transition-all duration-300'}`,className)}>
       {routes.map((route)=> (
         <Link 
         href={route.href}
         key={route.href}
-        className={cn("text-sm font-medium transition-colos hover:text-primary",route.active ? "text-black dark:text-white" : "text-muted-foreground")}>
+        className={cn("font-medium transition-colos hover:text-primary py-2 text-base",route.active ? "text-black dark:text-white" : "text-muted-foreground")}>
           {route.label}
         </Link>
       ))}
@@ -63,4 +66,4 @@ const MainNav = ({className,...props} : React.HTMLAttributes<HTMLElement>) => {
   )
 }
 
-export default MainNav
+export default MobileNav

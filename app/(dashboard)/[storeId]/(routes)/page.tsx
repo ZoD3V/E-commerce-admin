@@ -31,7 +31,7 @@ const DashboardPage = async({params}:DashboardPageProps) => {
                 <DollarSign className="h-4 w-4 text-muted-foreground"/>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-xl md:text-2xl font-bold">
                 {`Rp ${Math.floor(totalRevenue).toLocaleString('id-ID')}`}
               </div>
             </CardContent>
@@ -45,7 +45,7 @@ const DashboardPage = async({params}:DashboardPageProps) => {
                 <CreditCard className="h-4 w-4 text-muted-foreground"/>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-xl md:text-2xl font-bold">
                 {countSales}
               </div>
             </CardContent>
@@ -59,7 +59,7 @@ const DashboardPage = async({params}:DashboardPageProps) => {
                 <Package className="h-4 w-4 text-muted-foreground"/>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
+              <div className="text-xl md:text-2xl font-bold">
                 {countproduct}
               </div> 
             </CardContent>

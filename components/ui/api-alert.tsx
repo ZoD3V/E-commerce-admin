@@ -47,6 +47,7 @@ export const ApiAlert = ({title,description,variant = "public"}:ApiAlertProps) =
         <Button
         variant="outline"
         size="icon"
+        className="hidden md:flex"
         onClick={onCopy}>
           <Copy className="w-4 h-4"/>
         </Button>
