@@ -8,7 +8,7 @@ import MobileNav from "./MobileNav";
 type Props = {};
 
 const SelectorNav = (props: Props) => {
-  const [nav, setNav] = useState(true);
+  const [nav, setNav] = useState(false);
   return (
     <>
       <div className="ml-auto flex items-center space-x-4">
