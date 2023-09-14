@@ -1,7 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { BarChart4, BringToFront, GalleryThumbnails, Gamepad2, ListStart, Package2, Settings } from "lucide-react";
+import {
+  BarChart4,
+  BringToFront,
+  GalleryThumbnails,
+  Gamepad2,
+  ListStart,
+  Package2,
+  Settings,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
 
@@ -25,37 +33,37 @@ const MobileNav = ({ className, active }: MobileNavProps) => {
       href: `/${params.storeId}/banner`,
       label: "Banner",
       active: pathName === `/${params.storeId}/banner`,
-      icon:<GalleryThumbnails />
+      icon: <GalleryThumbnails />,
     },
     {
       href: `/${params.storeId}/category`,
       label: "Category",
       active: pathName === `/${params.storeId}/category`,
-      icon:<ListStart />
+      icon: <ListStart />,
     },
     {
       href: `/${params.storeId}/game`,
       label: "Game",
       active: pathName === `/${params.storeId}/game`,
-      icon:<Gamepad2 />
+      icon: <Gamepad2 />,
     },
     {
       href: `/${params.storeId}/product`,
       label: "Product",
       active: pathName === `/${params.storeId}/product`,
-      icon:<Package2 />
+      icon: <Package2 />,
     },
     {
       href: `/${params.storeId}/order`,
       label: "Order",
       active: pathName === `/${params.storeId}/order`,
-      icon:<BringToFront />
+      icon: <BringToFront />,
     },
     {
       href: `/${params.storeId}/settings`,
       label: "Settings",
       active: pathName === `/${params.storeId}/settings`,
-      icon:<Settings />
+      icon: <Settings />,
     },
   ];
 
@@ -64,7 +72,7 @@ const MobileNav = ({ className, active }: MobileNavProps) => {
       className={cn(
         `${
           active
-            ? "absolute z-[999] right-5 top-20 flex flex-col w-[250px] bg-white shadow-sm border border-gray-200 px-10 py-5 rounded-md transition-all duration-300 md:hidden"
+            ? "absolute z-[999] right-5 top-20 flex flex-col w-[250px] bg-white dark:bg-black shadow-sm border border-gray-200 dark:border-gray-500 px-10 py-5 rounded-md transition-all duration-300 md:hidden"
             : "hidden transition-all duration-300"
         }`,
         className
@@ -75,10 +83,10 @@ const MobileNav = ({ className, active }: MobileNavProps) => {
           href={route.href}
           key={route.href}
           className={cn(
-            "font-medium transition-colors duration-200 hover:text-primary dark:hover:text-gray-700 py-2 text-base flex items-center justify-start",
+            "font-medium transition-colors duration-200 hover:text-primary dark:hover:text-blue-400 py-2 text-base flex items-center justify-start",
             route.active
-              ? "text-black"
-              : "text-muted-foreground"
+              ? "text-black dark:text-blue-400"
+              : "text-muted-foreground dark:text-gray-400"
           )}
         >
           <div className="pr-4">{route.icon}</div>
