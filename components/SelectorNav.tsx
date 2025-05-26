@@ -12,13 +12,16 @@ const SelectorNav = (props: Props) => {
   return (
     <>
       <div className="ml-auto flex items-center space-x-4">
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <ThemeToggle />
         </div>
-        <UserButton afterSignOutUrl="/sign-in" />
-        <AlignRight className="block md:hidden cursor-pointer" onClick={()=> setNav(!nav)}/>
+        <UserButton />
+        <AlignRight
+          className="block lg:hidden cursor-pointer"
+          onClick={() => setNav(!nav)}
+        />
       </div>
-      <MobileNav active={nav}/>
+      <MobileNav active={nav} />
     </>
   );
 };

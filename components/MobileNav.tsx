@@ -8,6 +8,8 @@ import {
   Gamepad2,
   ListStart,
   Package2,
+  Paintbrush2Icon,
+  PencilRulerIcon,
   Settings,
 } from "lucide-react";
 import Link from "next/link";
@@ -45,7 +47,13 @@ const MobileNav = ({ className, active }: MobileNavProps) => {
       href: `/${params.storeId}/size`,
       label: "Size",
       active: pathName === `/${params.storeId}/size`,
-      icon: <Gamepad2 />,
+      icon: <PencilRulerIcon />,
+    },
+    {
+      href: `/${params.storeId}/color`,
+      label: "Color",
+      active: pathName === `/${params.storeId}/color`,
+      icon: <Paintbrush2Icon />,
     },
     {
       href: `/${params.storeId}/product`,
@@ -72,7 +80,7 @@ const MobileNav = ({ className, active }: MobileNavProps) => {
       className={cn(
         `${
           active
-            ? "absolute z-[999] right-5 top-20 flex flex-col w-[250px] bg-white dark:bg-black shadow-sm border border-gray-200 dark:border-gray-500 px-10 py-5 rounded-md transition-all duration-300 md:hidden"
+            ? "absolute z-[999] right-5 top-20 flex flex-col w-[250px] bg-white dark:bg-black shadow-sm border border-gray-200 dark:border-gray-500 px-10 py-5 rounded-md transition-all duration-300 lg:hidden"
             : "hidden transition-all duration-300"
         }`,
         className

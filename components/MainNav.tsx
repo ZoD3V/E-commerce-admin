@@ -55,7 +55,7 @@ const MainNav = ({className,...props} : React.HTMLAttributes<HTMLElement>) => {
 
   return (
     <nav
-    className={cn("items-center space-x-4 lg:space-x-6 hidden md:flex",className)}>
+    className={cn("items-center space-x-4 lg:space-x-6 hidden lg:flex",className)}>
       {routes.map((route)=> (
         <Link 
         href={route.href}

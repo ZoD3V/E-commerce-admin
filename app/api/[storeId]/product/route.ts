@@ -102,6 +102,10 @@ export async function GET(
 
     const sizeId = searchParams.get("sizeId") || undefined;
 
+    const colorId = searchParams.get("colorId") || undefined;
+
+    const status = searchParams.get("status") || undefined;
+
     const isFeatured = searchParams.get("isFeatured") || undefined;
 
     if (!params.storeId) {
@@ -113,7 +117,9 @@ export async function GET(
         storeId: params.storeId,
         categoryId,
         sizeId,
+        colorId,
         isFeatured: isFeatured ? true : undefined,
+        status: status ? true : undefined,
       },
       include: {
         size: true,
