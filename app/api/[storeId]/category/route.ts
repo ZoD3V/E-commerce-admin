@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server'
 
 import prismadb from '@/lib/prismadb';
  
@@ -64,9 +64,6 @@ export async function GET(
       where: {
         storeId: params.storeId
       },
-      include: {
-        size: true
-      }
     });
   
     return NextResponse.json(category);
