@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs";
 
-import prismadb from '@/lib/prismadb';
- 
+import prismadb from "@/lib/prismadb";
+
 export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
@@ -12,7 +12,16 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name,categoryId,gameId,status,isBattlePass,price,product_code } = body;
+    const {
+      name,
+      categoryId,
+      sizeId,
+      status,
+      isFeatured,
+      colorId,
+      images,
+      price,
+    } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -22,20 +31,24 @@ export async function POST(
       return new NextResponse("Name is required", { status: 400 });
     }
 
-        if (!categoryId) {
+    if (!categoryId) {
       return new NextResponse("Category Id is required", { status: 400 });
     }
 
-        if (!gameId) {
-      return new NextResponse("Game id is required", { status: 400 });
+    if (!sizeId) {
+      return new NextResponse("Size id is required", { status: 400 });
     }
 
-        if (!price) {
+    if (!images || !images.length) {
+      return new NextResponse("Image id is required", { status: 400 });
+    }
+
+    if (!price) {
       return new NextResponse("Price is required", { status: 400 });
     }
 
-      if (!product_code) {
-      return new NextResponse("Code product is required", { status: 400 });
+    if (!colorId) {
+      return new NextResponse("Color product is required", { status: 400 });
     }
 
     if (!params.storeId) {
@@ -46,7 +59,7 @@ export async function POST(
       where: {
         id: params.storeId,
         userId,
-      }
+      },
     });
 
     if (!storeByUserId) {
@@ -57,36 +70,40 @@ export async function POST(
       data: {
         name,
         categoryId,
-        gameId,
+        sizeId,
         status,
+        colorId,
         price,
-        product_code,
-        isBattlePass,
+        isFeatured,
+        image: {
+          createMany: {
+            data: [...images.map((image: { url: string }) => image)],
+          },
+        },
         storeId: params.storeId,
-      }
+      },
     });
-  
+
     return NextResponse.json(product);
   } catch (error) {
-    console.log('[PRODUCT_POST]', error);
+    console.log("[PRODUCT_POST]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-};
+}
 
 export async function GET(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
   try {
+    const { searchParams } = new URL(req.url);
 
-    const {searchParams} = new URL(req.url)
+    const categoryId = searchParams.get("categoryId") || undefined;
 
-    const categoryId = searchParams.get("categoryId") || undefined
+    const sizeId = searchParams.get("sizeId") || undefined;
 
-    const gameId = searchParams.get("gameId") || undefined
+    const isFeatured = searchParams.get("isFeatured") || undefined;
 
-    const isBattlePass = searchParams.get("isBattlePass") || undefined
-    
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
     }
@@ -95,21 +112,23 @@ export async function GET(
       where: {
         storeId: params.storeId,
         categoryId,
-        gameId,
-        isBattlePass: isBattlePass ? true : undefined
+        sizeId,
+        isFeatured: isFeatured ? true : undefined,
       },
       include: {
-        game: true,
-        category: true
+        size: true,
+        category: true,
+        color: true,
+        image: true,
       },
-      orderBy:{
-        createdAt:"desc"
-      }
+      orderBy: {
+        createdAt: "desc",
+      },
     });
-  
+
     return NextResponse.json(product);
   } catch (error) {
-    console.log('[PRODUCT_GET]', error);
+    console.log("[PRODUCT_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-};
+}

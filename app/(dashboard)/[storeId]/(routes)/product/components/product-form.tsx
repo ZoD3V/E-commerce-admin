@@ -21,7 +21,7 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
-import { Category, Game, Product } from "@prisma/client";
+import { Category, Size, Product, Color, Image } from "@prisma/client";
 import {
   Select,
   SelectContent,
@@ -30,10 +30,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import ImageUpload from "@/components/ui/image-upload";
 
-interface SettingProps {
-  initialData: Product | null;
-  gameData: Game[];
+interface ProductProps {
+  initialData:
+    | (Product & {
+        image: Image[];
+      })
+    | null;
+  sizeData: Size[];
+  colorData: Color[];
   categoryData: Category[];
 }
 
@@ -41,18 +47,20 @@ const formSchema = z.object({
   name: z.string().min(1),
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
-  gameId: z.string().min(1),
-  product_code: z.string().min(1),
+  sizeId: z.string().min(1),
+  image: z.object({ url: z.string() }).array(),
+  colorId: z.string().min(1),
   status: z.boolean().default(false).optional(),
-  isBattlePass: z.boolean().default(false).optional(),
+  isFeatured: z.boolean().default(false).optional(),
 });
 
 type ProductFormValues = z.infer<typeof formSchema>;
 
-const ProductForm: React.FC<SettingProps> = ({
+const ProductForm: React.FC<ProductProps> = ({
   initialData,
   categoryData,
-  gameData,
+  sizeData,
+  colorData,
 }) => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -73,9 +81,10 @@ const ProductForm: React.FC<SettingProps> = ({
           name: "",
           price: 0,
           categoryId: "",
-          gameId: "",
-          isBattlePass: false,
-          product_code: "",
+          image: [],
+          sizeId: "",
+          colorId: "",
+          isFeatured: false,
           status: false,
         },
   });
@@ -151,6 +160,30 @@ const ProductForm: React.FC<SettingProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Images</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value.map((image) => image.url)}
+                    disabled={loading}
+                    onChange={(url) =>
+                      field.onChange([...field.value, { url }])
+                    }
+                    onRemove={(url) =>
+                      field.onChange([
+                        ...field.value.filter((current) => current.url !== url),
+                      ])
+                    }
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="md:grid md:grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -162,24 +195,6 @@ const ProductForm: React.FC<SettingProps> = ({
                     <Input
                       disabled={loading}
                       placeholder="Name Product"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="product_code"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Product Code</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Product Code"
                       {...field}
                     />
                   </FormControl>
@@ -242,10 +257,10 @@ const ProductForm: React.FC<SettingProps> = ({
 
             <FormField
               control={form.control}
-              name="gameId"
+              name="sizeId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Game</FormLabel>
+                  <FormLabel>Size</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
@@ -261,7 +276,39 @@ const ProductForm: React.FC<SettingProps> = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {gameData.map((item) => (
+                      {sizeData.map((item) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="colorId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Color</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a color"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {colorData.map((item) => (
                         <SelectItem key={item.id} value={item.id}>
                           {item.name}
                         </SelectItem>
@@ -275,7 +322,7 @@ const ProductForm: React.FC<SettingProps> = ({
 
             <FormField
               control={form.control}
-              name="isBattlePass"
+              name="isFeatured"
               render={({ field }) => (
                 <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 my-4 md:my-0">
                   <FormControl>
@@ -286,9 +333,9 @@ const ProductForm: React.FC<SettingProps> = ({
                   </FormControl>
                   <FormMessage />
                   <div className="space-y-1 leading-none">
-                    <FormLabel>Battle Pass</FormLabel>
+                    <FormLabel>Featured Item</FormLabel>
                     <FormDescription>
-                      This product will appear as battle pass item
+                      This product will appear as featured item
                     </FormDescription>
                   </div>
                 </FormItem>

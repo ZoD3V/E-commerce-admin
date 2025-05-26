@@ -18,7 +18,7 @@ const OrderClient = ({data}:OrderClientProps) => {
         <Heading title={`Order (${data.length})`} description="Manage Order" />
       </div>
       <Separator/>
-      <DataTable searchKey='gameId' columns={columns} data={data}/>
+      <DataTable searchKey='sizeId' columns={columns} data={data}/>
 
 
     </>

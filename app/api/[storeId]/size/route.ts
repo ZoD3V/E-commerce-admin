@@ -12,7 +12,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name,categoryId,name_dev,imgUrl,desc } = body;
+    const { name,value } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -22,20 +22,8 @@ export async function POST(
       return new NextResponse("Name is required", { status: 400 });
     }
 
-    if (!desc) {
-      return new NextResponse("Description is required", { status: 400 });
-    }
-
-    if (!imgUrl) {
-      return new NextResponse("Image is required", { status: 400 });
-    }
-
-    if (!name_dev) {
-      return new NextResponse("Name developer is required", { status: 400 });
-    }
-
-    if (!categoryId) {
-      return new NextResponse("Category is required", { status: 400 });
+    if (!value) {
+      return new NextResponse("Value is required", { status: 400 });
     }
 
     if (!params.storeId) {
@@ -53,20 +41,17 @@ export async function POST(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const game = await prismadb.game.create({
+    const sizeData = await prismadb.size.create({
       data: {
         name,
-        name_dev,
-        categoryId,
-        imgUrl,
-        desc,
+        value,
         storeId: params.storeId,
       }
     });
   
-    return NextResponse.json(game);
+    return NextResponse.json(sizeData);
   } catch (error) {
-    console.log('[GAME_POST]', error);
+    console.log('[SIZE_POST]', error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
@@ -80,15 +65,15 @@ export async function GET(
       return new NextResponse("Store id is required", { status: 400 });
     }
 
-    const game = await prismadb.game.findMany({
+    const sizes = await prismadb.size.findMany({
       where: {
         storeId: params.storeId
       }
     });
   
-    return NextResponse.json(game);
+    return NextResponse.json(sizes);
   } catch (error) {
-    console.log('[GAME_GET]', error);
+    console.log('[SIZE_GET]', error);
     return new NextResponse("Internal error", { status: 500 });
   }
 };

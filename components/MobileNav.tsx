@@ -42,9 +42,9 @@ const MobileNav = ({ className, active }: MobileNavProps) => {
       icon: <ListStart />,
     },
     {
-      href: `/${params.storeId}/game`,
-      label: "Game",
-      active: pathName === `/${params.storeId}/game`,
+      href: `/${params.storeId}/size`,
+      label: "Size",
+      active: pathName === `/${params.storeId}/size`,
       icon: <Gamepad2 />,
     },
     {

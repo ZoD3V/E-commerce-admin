@@ -19,7 +19,7 @@ const OrderPage = async({params}:{params:{storeId:string}}) => {
 
     const formattedOrder: OrderColumn[] = order.map((item) => ({
     id: item.id,
-    gameId: item.gameId,
+    sizeId: item.sizeId,
     phone: item.phone,
     product:item.product.name,
     amount:`Rp ${Math.floor(item.amount.toNumber()).toLocaleString('id-ID')}`,

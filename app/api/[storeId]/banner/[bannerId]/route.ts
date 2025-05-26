@@ -9,7 +9,7 @@ export async function GET(
 ) {
   try {
     if (!params.bannerId) {
-      return new NextResponse("banner id is required", { status: 400 });
+      return new NextResponse("Banner id is required", { status: 400 });
     }
 
     const banner = await prismadb.banner.findUnique({
@@ -37,7 +37,7 @@ export async function DELETE(
     }
 
     if (!params.bannerId) {
-      return new NextResponse("banner id is required", { status: 400 });
+      return new NextResponse("Banner id is required", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({

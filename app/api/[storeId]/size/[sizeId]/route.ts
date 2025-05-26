@@ -5,29 +5,29 @@ import prismadb from "@/lib/prismadb";
 
 export async function GET(
   req: Request,
-  { params }: { params: { gameId: string } }
+  { params }: { params: { sizeId: string } }
 ) {
   try {
-    if (!params.gameId) {
-      return new NextResponse("game id is required", { status: 400 });
+    if (!params.sizeId) {
+      return new NextResponse("Size id is required", { status: 400 });
     }
 
-    const game = await prismadb.game.findUnique({
+    const size = await prismadb.size.findUnique({
       where: {
-        id: params.gameId,
+        id: params.sizeId,
       },
     });
 
-    return NextResponse.json(game);
+    return NextResponse.json(size);
   } catch (error) {
-    console.log("[GAME_GET]", error);
+    console.log("[SIZE_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { gameId: string; storeId: string } }
+  { params }: { params: { sizeId: string; storeId: string } }
 ) {
   try {
     const { userId } = auth();
@@ -36,8 +36,8 @@ export async function DELETE(
       return new NextResponse("Unauthenticated", { status: 403 });
     }
 
-    if (!params.gameId) {
-      return new NextResponse("game id is required", { status: 400 });
+    if (!params.sizeId) {
+      return new NextResponse("Size id is required", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
@@ -51,29 +51,29 @@ export async function DELETE(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    const game = await prismadb.game.deleteMany({
+    const size = await prismadb.size.deleteMany({
       where: {
-        id: params.gameId,
+        id: params.sizeId,
       },
     });
 
-    return NextResponse.json(game);
+    return NextResponse.json(size);
   } catch (error) {
-    console.log("[GAME_DELETE]", error);
+    console.log("[SIZE_DELETE]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { gameId: string; storeId: string } }
+  { params }: { params: { sizeId: string; storeId: string } }
 ) {
   try {
     const { userId } = auth();
 
     const body = await req.json();
 
-    const { name, categoryId, name_dev, imgUrl, desc } = body;
+    const { name, value } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -83,21 +83,10 @@ export async function PATCH(
       return new NextResponse("Name is required", { status: 400 });
     }
 
-    if (!desc) {
-      return new NextResponse("Description is required", { status: 400 });
+    if (!value) {
+      return new NextResponse("Value is required", { status: 400 });
     }
 
-    if (!imgUrl) {
-      return new NextResponse("Image is required", { status: 400 });
-    }
-
-    if (!name_dev) {
-      return new NextResponse("Name developer is required", { status: 400 });
-    }
-
-    if (!categoryId) {
-      return new NextResponse("Category is required", { status: 400 });
-    }
 
     if (!params.storeId) {
       return new NextResponse("Store id is required", { status: 400 });
@@ -114,40 +103,20 @@ export async function PATCH(
       return new NextResponse("Unauthorized", { status: 405 });
     }
 
-    if (!imgUrl) {
-      const game = await prismadb.game.update({
-        where: {
-          id: params.gameId,
-        },
-        data: {
-          name,
-          name_dev,
-          categoryId,
-          desc,
-          storeId: params.storeId,
-        },
-      });
-
-      return NextResponse.json(game);
-    }
-
-    const game = await prismadb.game.update({
+    const size = await prismadb.size.update({
       where: {
-        id: params.gameId,
+        id: params.sizeId,
       },
       data: {
         name,
-        name_dev,
-        categoryId,
-        imgUrl,
-        desc,
+        value,
         storeId: params.storeId,
       },
     });
 
-    return NextResponse.json(game);
+    return NextResponse.json(size);
   } catch (error) {
-    console.log("[GAME_PATCH]", error);
+    console.log("[SIZE_PATCH]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

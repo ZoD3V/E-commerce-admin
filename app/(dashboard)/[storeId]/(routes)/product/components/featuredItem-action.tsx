@@ -11,23 +11,23 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-interface BattlePassActionProps {
+interface FeaturedItemActionProps {
   data: ProductColumn;
 }
 
 const formSchema = z.object({
-  battle_pass: z.boolean().default(false).optional(),
+  featured_item: z.boolean().default(false).optional(),
 });
 
-type BattlePassFormValues = z.infer<typeof formSchema>;
+type FeaturedItemActionFormValues = z.infer<typeof formSchema>;
 
-const BattlePassAction = ({ data }: BattlePassActionProps) => {
+const FeaturedItemAction = ({ data }: FeaturedItemActionProps) => {
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<BattlePassFormValues>({
+  const form = useForm<FeaturedItemActionFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      battle_pass: false,
+      featured_item: false,
     },
   });
 
@@ -39,7 +39,7 @@ const BattlePassAction = ({ data }: BattlePassActionProps) => {
       setLoading(true);
       // console.log(data)
       const numericPrice = parseInt(data.price.replace(/\D/g, ""), 10);
-      const updatedData = { ...data, isBattlePass: !data.isBattlePass,price:numericPrice,isBattlePassUpdate:true };
+      const updatedData = { ...data, isFeatured: !data.isFeatured,price:numericPrice,isFeaturedUpdate:true };
 
       await axios.patch(
         `/api/${params.storeId}/product/${data.id}`,
@@ -63,7 +63,7 @@ const BattlePassAction = ({ data }: BattlePassActionProps) => {
           className="space-y-8 w-full"
         >
           {
-            data.isBattlePass ? (
+            data.isFeatured ? (
             <Button disabled={loading} type="submit" variant="destructive">
               Active
             </Button>
@@ -79,4 +79,4 @@ const BattlePassAction = ({ data }: BattlePassActionProps) => {
   );
 };
 
-export default BattlePassAction;
+export default FeaturedItemAction;

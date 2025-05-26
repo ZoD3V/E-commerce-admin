@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { GameColumn } from "./columns";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +13,10 @@ import toast from "react-hot-toast";
 import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { AlertModal } from "@/components/modals/alert-modal";
+import { ColorColumn } from "./columns";
 
 interface CellActionProps {
-  data: GameColumn;
+  data: ColorColumn;
 }
 
 const CellAction = ({ data }: CellActionProps) => {
@@ -34,13 +34,13 @@ const CellAction = ({ data }: CellActionProps) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/game/${data.id}`);
+      await axios.delete(`/api/${params.storeId}/color/${data.id}`);
       router.refresh();
-      router.push(`/${params.storeId}/game`);
-      toast.success("Game deleted.");
+      router.push(`/${params.storeId}/color`);
+      toast.success("Size deleted.");
     } catch (error: any) {
       toast.error(
-        "Make sure you removed all products using this game first."
+        "Make sure you removed all products using this color first."
       );
     } finally {
       setLoading(false);
@@ -70,7 +70,7 @@ const CellAction = ({ data }: CellActionProps) => {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() =>
-              router.push(`/${params.storeId}/game/${data.id}`)
+              router.push(`/${params.storeId}/color/${data.id}`)
             }
           >
             <Edit className="mr-2 h-4 w-4" />

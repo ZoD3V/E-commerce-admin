@@ -17,7 +17,9 @@ export async function GET(
         id: params.productId,
       },
       include: {
-        game: true,
+        size: true,
+        image: true,
+        color: true,
         category: true,
       },
     });
@@ -41,7 +43,7 @@ export async function DELETE(
     }
 
     if (!params.productId) {
-      return new NextResponse("category id is required", { status: 400 });
+      return new NextResponse("Product id is required", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
@@ -80,13 +82,14 @@ export async function PATCH(
     const {
       name,
       categoryId,
-      gameId,
+      sizeId,
       status,
-      isBattlePass,
+      isFeatured,
       price,
-      product_code,
       statusUpdate,
-      isBattlePassUpdate
+      isFeaturedUpdate,
+      colorId,
+      image,
     } = body;
 
     if (!userId) {
@@ -97,16 +100,16 @@ export async function PATCH(
       return new NextResponse("Name is required", { status: 400 });
     }
 
-    if (!categoryId) {
-      return new NextResponse("Category Id is required", { status: 400 });
+    if (!sizeId) {
+      return new NextResponse("Size id is required", { status: 400 });
     }
 
     if (!price) {
       return new NextResponse("Price is required", { status: 400 });
     }
 
-    if (!product_code) {
-      return new NextResponse("Code product is required", { status: 400 });
+    if (!price) {
+      return new NextResponse("Price is required", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
@@ -134,15 +137,13 @@ export async function PATCH(
       return NextResponse.json(product);
     }
 
-    console.log(isBattlePassUpdate)
-    
-    if (isBattlePassUpdate) {
+    if (isFeaturedUpdate) {
       const product = await prismadb.product.update({
         where: {
           id: params.productId,
         },
         data: {
-          isBattlePass,
+          isFeatured,
           storeId: params.storeId,
         },
       });
@@ -150,19 +151,35 @@ export async function PATCH(
       return NextResponse.json(product);
     }
 
-    const product = await prismadb.product.update({
+    await prismadb.product.update({
       where: {
         id: params.productId,
       },
       data: {
         name,
         categoryId,
-        gameId,
+        sizeId,
         status,
         price,
-        product_code,
-        isBattlePass,
+        isFeatured,
+        colorId,
+        image: {
+          deleteMany: {},
+        },
         storeId: params.storeId,
+      },
+    });
+
+    const product = await prismadb.product.update({
+      where: {
+        id: params.productId,
+      },
+      data: {
+        image: {
+          createMany: {
+            data: [...image.map((image: { url: string }) => image)],
+          },
+        },
       },
     });
 

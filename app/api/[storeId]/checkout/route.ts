@@ -17,7 +17,7 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { amount, productId, gameId,phone } = await req.json();
+  const { amount, productId, sizeId,phone } = await req.json();
 
   if (!amount) {
     return new NextResponse("Amount is required", { status: 400 });
@@ -27,15 +27,15 @@ export async function POST(
     return new NextResponse("Product Id is required", { status: 400 });
   }
 
-  if (!gameId) {
-    return new NextResponse("Game Id is required", { status: 400 });
+  if (!sizeId) {
+    return new NextResponse("Size Id is required", { status: 400 });
   }
 
 
   const order = await prismadb.order.create({
     data:{
       storeId:params.storeId,
-      gameId,
+      sizeId,
       amount,
       phone,
       productId,
