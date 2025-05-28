@@ -19,7 +19,7 @@ export async function POST(
       status,
       isFeatured,
       colorId,
-      images,
+      image,
       price,
     } = body;
 
@@ -39,7 +39,7 @@ export async function POST(
       return new NextResponse("Size id is required", { status: 400 });
     }
 
-    if (!images || !images.length) {
+    if (!image || !image.length) {
       return new NextResponse("Image id is required", { status: 400 });
     }
 
@@ -77,7 +77,7 @@ export async function POST(
         isFeatured,
         image: {
           createMany: {
-            data: [...images.map((image: { url: string }) => image)],
+            data: [...image.map((image: { url: string }) => image)],
           },
         },
         storeId: params.storeId,
