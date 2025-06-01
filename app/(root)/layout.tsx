@@ -1,6 +1,7 @@
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { getStoreByUserId } from "@prisma/client/sql";
 
 export default async function SetupLayout({
   children,
@@ -13,11 +14,7 @@ export default async function SetupLayout({
     redirect("/sign-in");
   }
 
-  const store = await prismadb.store.findFirst({
-    where: {
-      userId,
-    },
-  });
+  const [store] = await prismadb.$queryRawTyped(getStoreByUserId(userId));
 
   if (store) {
     redirect(`/${store.id}`);

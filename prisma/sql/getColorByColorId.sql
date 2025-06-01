@@ -1,0 +1,1 @@
+SELECT * FROM "Color" WHERE id = $1 LIMIT 1

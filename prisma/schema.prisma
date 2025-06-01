@@ -115,7 +115,7 @@ model Order{
   phone String @default("") 
   transaction_code String @unique
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @updatedAt @default(now())
 
   @@index([storeId])
   @@index([productId])

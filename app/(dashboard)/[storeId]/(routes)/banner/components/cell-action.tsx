@@ -47,6 +47,7 @@ const CellAction = ({ data }: CellActionProps) => {
       setOpen(false);
     }
   };
+  
   return (
     <>
       <AlertModal

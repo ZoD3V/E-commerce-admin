@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/ui/data-table'
 import Heading from '@/components/ui/heading'
-import { Banner } from '@prisma/client'
 import { Separator } from '@radix-ui/react-separator'
 import { Plus } from 'lucide-react'
 import { useParams, useRouter } from 'next/navigation'

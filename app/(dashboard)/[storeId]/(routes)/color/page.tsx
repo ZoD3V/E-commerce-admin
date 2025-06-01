@@ -3,16 +3,12 @@ import prismadb from "@/lib/prismadb";
 import { ColorColumn } from "./components/columns";
 import { format } from "date-fns";
 import ColorClient from "./components/client";
+import { getColorByStoreId } from "@prisma/client/sql";
 
 const ColorPage = async ({ params }: { params: { storeId: string } }) => {
-  const colors = await prismadb.color.findMany({
-    where: {
-      storeId: params.storeId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const colors = await prismadb.$queryRawTyped(
+    getColorByStoreId(params.storeId)
+  );
 
   const formattedSize: ColorColumn[] = colors.map((item) => ({
     id: item.id,
