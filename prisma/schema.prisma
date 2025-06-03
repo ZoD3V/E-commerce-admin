@@ -33,6 +33,7 @@ model Banner {
   store     Store @relation("StoreToBanner", fields: [storeId], references: [id])
   label     String
   imgUrl    String
+  categories Category[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -44,11 +45,14 @@ model Category{
   storeId String
   store Store @relation("StoreToCategory",fields: [storeId], references: [id])
   products Product[] @relation("CategoryToProduct")
+  bannerId String
+  banner Banner @relation(fields: [bannerId], references: [id])
   name String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([storeId])
+  @@index([bannerId])
 }
 
 model Size{

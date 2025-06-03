@@ -21,10 +21,17 @@ import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { AlertModal } from "@/components/modals/alert-modal";
 import { Banner, Category } from "@prisma/client";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface SettingProps {
   initialData: Category | null;
-  bannerData: Banner[]
+  bannerData: any[];
 }
 
 const formSchema = z.object({
@@ -34,7 +41,9 @@ const formSchema = z.object({
 
 type CategoryFormValues = z.infer<typeof formSchema>;
 
-const CategoryForm: React.FC<SettingProps> = ({ initialData,bannerData }) => {
+const CategoryForm: React.FC<SettingProps> = ({ initialData, bannerData }) => {
+  console.log(initialData)
+  console.log(bannerData)
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -47,6 +56,7 @@ const CategoryForm: React.FC<SettingProps> = ({ initialData,bannerData }) => {
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: "",
+      bannerId: "",
     },
   });
 
@@ -140,6 +150,38 @@ const CategoryForm: React.FC<SettingProps> = ({ initialData,bannerData }) => {
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="bannerId"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Banner</FormLabel>
+                  <Select
+                    disabled={loading}
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue
+                          defaultValue={field.value}
+                          placeholder="Select a banner"
+                        />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {bannerData.map((banner) => (
+                        <SelectItem key={banner?.id} value={banner?.id}>
+                          {banner.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}

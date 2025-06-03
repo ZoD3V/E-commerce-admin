@@ -1,18 +1,18 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server'
+import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 
-import prismadb from '@/lib/prismadb';
- 
+import prismadb from "@/lib/prismadb";
+
 export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
   try {
-const { userId } = await auth();
+    const { userId } = await auth();
 
     const body = await req.json();
 
-    const { name } = body;
+    const { name, bannerId } = body;
 
     if (!userId) {
       return new NextResponse("Unauthenticated", { status: 403 });
@@ -20,6 +20,10 @@ const { userId } = await auth();
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
+    }
+
+    if (!bannerId) {
+      return new NextResponse("Banner is required", { status: 400 });
     }
 
     if (!params.storeId) {
@@ -30,7 +34,7 @@ const { userId } = await auth();
       where: {
         id: params.storeId,
         userId,
-      }
+      },
     });
 
     if (!storeByUserId) {
@@ -40,16 +44,17 @@ const { userId } = await auth();
     const category = await prismadb.category.create({
       data: {
         name,
+        bannerId,
         storeId: params.storeId,
-      }
+      },
     });
-  
+
     return NextResponse.json(category);
   } catch (error) {
-    console.log('[CATEGORY_POST]', error);
+    console.log("[CATEGORY_POST]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-};
+}
 
 export async function GET(
   req: Request,
@@ -62,13 +67,13 @@ export async function GET(
 
     const category = await prismadb.category.findMany({
       where: {
-        storeId: params.storeId
+        storeId: params.storeId,
       },
     });
-  
+
     return NextResponse.json(category);
   } catch (error) {
-    console.log('[CATEGORY_GET]', error);
+    console.log("[CATEGORY_GET]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
-};
+}
