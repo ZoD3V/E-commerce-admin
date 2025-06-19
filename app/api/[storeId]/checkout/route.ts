@@ -17,7 +17,7 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { amount, productId, sizeId,phone } = await req.json();
+  const { amount, productId, address, phone } = await req.json();
 
   if (!amount) {
     return new NextResponse("Amount is required", { status: 400 });
@@ -27,21 +27,20 @@ export async function POST(
     return new NextResponse("Product Id is required", { status: 400 });
   }
 
-  if (!sizeId) {
+  if (!address) {
     return new NextResponse("Size Id is required", { status: 400 });
   }
 
-
   const order = await prismadb.order.create({
-    data:{
-      storeId:params.storeId,
-      sizeId,
+    data: {
+      storeId: params.storeId,
+      address,
       amount,
       phone,
       productId,
-      transaction_code:randomstring.generate(7)
-    }
-  })
+      transaction_code: randomstring.generate(7),
+    },
+  });
 
   try {
     // Create Snap API instance
@@ -59,16 +58,13 @@ export async function POST(
       credit_card: {
         secure: true,
       },
-
     };
 
-    const data = await snap.createTransaction(parameter)
+    const data = await snap.createTransaction(parameter);
 
-    return NextResponse.json({data},{headers:corsHeaders})
-
-
+    return NextResponse.json({ data }, { headers: corsHeaders });
   } catch (error) {
-    console.log('[ORDER_POST]', error);
+    console.log("[ORDER_POST]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

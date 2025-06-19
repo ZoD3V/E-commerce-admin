@@ -113,10 +113,10 @@ model Order{
   store Store @relation("StoreToOrder",fields: [storeId], references: [id])
   productId String
   product Product @relation("ProductToOrder",fields: [productId], references: [id])
-  sizeId String
   amount Decimal @db.Decimal(15,2)
   status String @default("pending")
   phone String @default("") 
+  address String @default("") 
   transaction_code String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt @default(now())
