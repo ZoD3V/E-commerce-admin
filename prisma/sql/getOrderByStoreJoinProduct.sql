@@ -2,7 +2,6 @@ SELECT
     "Order".id,
     "Order"."storeId",
     "Order"."productId",
-    "Order"."sizeId",
     "Order".amount,
     "Order".status,
     "Order".phone,
