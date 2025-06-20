@@ -9,18 +9,22 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization",
 };
 
-export async function OPTIONS() {
-  return NextResponse.json({}, { headers: corsHeaders });
-}
+// export async function OPTIONS() {
+//   return NextResponse.json({}, { headers: corsHeaders });
+// }
 
 export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { amount, productId, address, phone } = await req.json();
+  const { name,amount, productId, address, phone } = await req.json();
 
   if (!amount) {
     return new NextResponse("Amount is required", { status: 400 });
+  }
+
+  if (!name) {
+    return new NextResponse("Name is required", { status: 400 });
   }
 
   if (!productId) {
@@ -28,13 +32,14 @@ export async function POST(
   }
 
   if (!address) {
-    return new NextResponse("Size Id is required", { status: 400 });
+    return new NextResponse("address Id is required", { status: 400 });
   }
 
   const order = await prismadb.order.create({
     data: {
       storeId: params.storeId,
       address,
+      name,
       amount,
       phone,
       productId,
@@ -61,7 +66,7 @@ export async function POST(
     };
 
     const data = await snap.createTransaction(parameter);
-
+    console.log(data)
     return NextResponse.json({ data }, { headers: corsHeaders });
   } catch (error) {
     console.log("[ORDER_POST]", error);
