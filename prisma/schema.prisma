@@ -115,6 +115,7 @@ model Order{
   product Product @relation("ProductToOrder",fields: [productId], references: [id])
   amount Decimal @db.Decimal(15,2)
   status String @default("pending")
+  name String @default("") 
   phone String @default("") 
   address String @default("") 
   transaction_code String @unique
