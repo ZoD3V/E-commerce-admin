@@ -1,8 +1,8 @@
 FROM node:20-alpine AS build
 
-COPY prisma /app/prisma
-
 WORKDIR /app
+
+COPY prisma /app/prisma
 
 COPY package*.json ./
 
@@ -14,16 +14,17 @@ COPY . .
 
 RUN npm run build
 
-# -------------------------------
+FROM node:20-alpine
 
-FROM nginx:latest
+WORKDIR /app
 
-RUN rm /etc/nginx/conf.d/default.conf
+COPY --from=build /app /app
 
-COPY nginx.conf /etc/nginx/conf.d
+RUN apk add --no-cache nginx
 
-COPY --from=build /app/.next /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+# Jalankan aplikasi Next.js SSR di background dan Nginx di foreground
+CMD ["sh", "-c", "npm run start & nginx -g 'daemon off;'"]
