@@ -34,7 +34,7 @@ build:
 build-image:
   stage: build-image
   script:
-    - docker login -u gitlab+deploy-token-8389227 -p gldt-v_tELQUD4BC-JtACWf-x registry.gitlab.com
+    - docker login -u gitlab+deploy-token-8405919 -p gldt--6ASr-grvGzubThyvycH registry.gitlab.com
     - docker build -t registry.gitlab.com/z0d3v1/e-commerce-admin:1.0.0 .
     - docker push registry.gitlab.com/z0d3v1/e-commerce-admin:1.0.0
   tags:
