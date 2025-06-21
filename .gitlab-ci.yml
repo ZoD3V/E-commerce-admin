@@ -4,13 +4,14 @@ stages:
   - build-image
   - deploy
 
-image: node:18-alpine # Menggunakan image Node.js yang ringan
+image: node:20-alpine # Menggunakan image Node.js yang ringan
 
 # Install dependencies
 install:
   stage: install
   script:
     - npm install --force
+    - npm install @prisma/client
   artifacts:
     paths:
       - node_modules/
@@ -22,6 +23,7 @@ build:
   stage: build
   script:
     - npm run build
+    - npx prisma generate
   artifacts:
     paths:
       - .next/ # Menyimpan hasil build Next.js
