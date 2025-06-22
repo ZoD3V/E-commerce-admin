@@ -6,10 +6,11 @@ import { ColumnDef } from "@tanstack/react-table";
 // You can use a Zod schema here if you want.
 export type OrderColumn = {
   phone: string;
-  amount: string;
+  address: string;
   status: string;
   transaction_code: string;
   product: string;
+  totalPrice: string;
   createdAt: string;
 };
 
@@ -23,8 +24,8 @@ export const columns: ColumnDef<OrderColumn>[] = [
     header: "phone",
   },
   {
-    accessorKey: "amount",
-    header: "amount",
+    accessorKey: "totalPrice",
+    header: "Total Price",
   },
   {
     accessorKey: "transaction_code",

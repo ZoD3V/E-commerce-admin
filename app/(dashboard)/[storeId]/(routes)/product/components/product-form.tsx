@@ -92,6 +92,11 @@ const ProductForm: React.FC<ProductProps> = ({
   const params = useParams();
   const router = useRouter();
 
+  const formatRupiah = (value: string) => {
+    const num = value.replace(/\D/g, "");
+    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
   const onSubmit = async (data: ProductFormValues) => {
     try {
       setLoading(true);
@@ -243,12 +248,25 @@ const ProductForm: React.FC<ProductProps> = ({
                 <FormItem>
                   <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      type="number"
-                      placeholder="10.000"
-                      {...field}
-                    />
+                    <div className="flex items-center">
+                      <span className="bg-gray-100 px-3 py-[7px] rounded-l-md border border-r-0 border-input">
+                        Rp
+                      </span>
+                      <Input
+                        disabled={loading}
+                        placeholder="10.000"
+                        className="rounded-l-none"
+                        value={
+                          field.value
+                            ? Number(field.value).toLocaleString("id-ID")
+                            : ""
+                        }
+                        onChange={(e) => {
+                          const rawValue = e.target.value.replace(/\D/g, "");
+                          field.onChange(rawValue);
+                        }}
+                      />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

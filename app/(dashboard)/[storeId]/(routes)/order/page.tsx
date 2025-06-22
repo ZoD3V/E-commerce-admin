@@ -3,17 +3,36 @@ import prismadb from "@/lib/prismadb";
 import { OrderColumn } from "./components/columns";
 import { format } from "date-fns";
 import OrderClient from "./components/client";
-import { getOrderByStoreJoinProduct } from "@prisma/client/sql";
+import { formatter } from "@/lib/utils";
 
 const OrderPage = async ({ params }: { params: { storeId: string } }) => {
-  const order = await prismadb.$queryRawTyped(
-    getOrderByStoreJoinProduct(params.storeId)
-  );
+  const order = await prismadb.order.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+    include: {
+      orderItems: {
+        include: {
+          product: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   const formattedOrder: OrderColumn[] = order.map((item) => ({
     phone: item.phone,
-    product: item.product,
-    amount: `Rp ${Math.floor(item.amount.toNumber()).toLocaleString("id-ID")}`,
+    address: item.address,
+    product: item.orderItems
+      .map((orderItem) => orderItem.product.name)
+      .join(", "),
+    totalPrice: formatter.format(
+      item.orderItems.reduce((total, item) => {
+        return total + Math.floor(Number(item.product.price));
+      }, 0)
+    ),
     transaction_code: item.transaction_code,
     status: item.status,
     createdAt: format(item.createdAt, "MMMM dd, yyyy"),

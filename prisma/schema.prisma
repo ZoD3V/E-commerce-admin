@@ -91,7 +91,7 @@ model Product{
   size Size @relation("sizeToProduct",fields: [sizeId], references: [id])
   colorId String @default("")
   color Color @relation("colorToProduct",fields: [colorId], references: [id])
-  product Order[] @relation("ProductToOrder")
+  orderItems OrderItem[]
   name String
   image Image[]
   price Decimal @db.Decimal(15,2)
@@ -111,9 +111,7 @@ model Order{
   id String   @id @default(uuid())
   storeId String
   store Store @relation("StoreToOrder",fields: [storeId], references: [id])
-  productId String
-  product Product @relation("ProductToOrder",fields: [productId], references: [id])
-  amount Decimal @db.Decimal(15,2)
+  orderItems OrderItem[]
   status String @default("pending")
   name String @default("") 
   phone String @default("") 
@@ -123,6 +121,16 @@ model Order{
   updatedAt DateTime @updatedAt @default(now())
 
   @@index([storeId])
+}
+
+model OrderItem {
+  id String   @id @default(uuid())
+  orderId String
+  order Order  @relation(fields: [orderId], references: [id])
+  productId String
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
   @@index([productId])
 }
 
