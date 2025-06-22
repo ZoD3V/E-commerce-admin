@@ -35,17 +35,31 @@ export async function POST(
     return new NextResponse("address Id is required", { status: 400 });
   }
 
-  const product = await prismadb.product.findMany({
+  const productIds = productId.map(
+    (item: { productId: string }) => item.productId
+  );
+
+  const products = await prismadb.product.findMany({
     where: {
       id: {
-        in: productId.productId,
+        in: productIds,
       },
     },
   });
 
+  if (products.length !== productIds.length) {
+    const missingIds = productIds.filter(
+      (id: string) => !products.some((product) => product.id === id)
+    );
+    return new NextResponse(
+      `Some products not found: ${missingIds.join(", ")}`,
+      { status: 404 }
+    );
+  }
+
   const order = await prismadb.order.create({
     data: {
-      storeId: params.storeId,
+      storeId: "66d05e86-414f-46d3-95b5-031ae4a11a14",
       address,
       name,
       phone,
