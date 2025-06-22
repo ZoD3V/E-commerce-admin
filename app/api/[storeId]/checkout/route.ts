@@ -81,7 +81,6 @@ export async function POST(
     };
 
     const data = await snap.createTransaction(parameter);
-    console.log(data);
     return NextResponse.json({ data }, { headers: corsHeaders });
   } catch (error) {
     console.log("[ORDER_POST]", error);

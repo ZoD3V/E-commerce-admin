@@ -11,7 +11,6 @@ interface OrderClientProps {
 }
 
 const OrderClient = ({ data }: OrderClientProps) => {
-  console.log(data)
   return (
     <>
       <div className="flex items-center justify-between">

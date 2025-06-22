@@ -42,8 +42,6 @@ const formSchema = z.object({
 type CategoryFormValues = z.infer<typeof formSchema>;
 
 const CategoryForm: React.FC<SettingProps> = ({ initialData, bannerData }) => {
-  console.log(initialData)
-  console.log(bannerData)
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
