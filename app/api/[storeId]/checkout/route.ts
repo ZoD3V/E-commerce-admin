@@ -59,7 +59,7 @@ export async function POST(
 
   const order = await prismadb.order.create({
     data: {
-      storeId: "66d05e86-414f-46d3-95b5-031ae4a11a14",
+      storeId: params.storeId,
       address,
       name,
       phone,
