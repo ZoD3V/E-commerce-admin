@@ -89,6 +89,16 @@ export async function POST(
         order_id: order.transaction_code,
         gross_amount: amount,
       },
+      customer_details: {
+        first_name: name,
+        phone: phone,
+        billing_address: {
+          first_name: name,
+          phone: phone,
+          address: address,
+          country_code: "IDN",
+        },
+      },
       credit_card: {
         secure: true,
       },
